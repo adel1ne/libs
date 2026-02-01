@@ -1,0 +1,25 @@
+# Зависимости
+node_modules/
+
+# Сборка
+dist/
+*.tsbuildinfo
+
+# Yarn
+.yarn/cache
+.yarn/install-state.gz
+.pnp.*
+
+# Артефакты
+*.tgz
+
+# IDE и ОС
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+
+# Переменные окружения
+.env
+.env.local
