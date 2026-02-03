@@ -40,7 +40,7 @@
     "fastify": "^4.28.0",
     "inversify": "^6.0.0",
     "ioredis": "^5.4.0",
-    "joi": "^17.13.0",
+    "joi": "^18.0.1",
     "jsonpath-plus": "^9.0.0",
     "mongoose": "^8.0.0",
     "pino": "^9.0.0"
