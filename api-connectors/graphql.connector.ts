@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { inject, injectable } from 'inversify'
+import { injectable } from 'inversify'
 import { ConnectorConfig, GraphQLConnectorConfig, ConnectorHandler, ConnectorTypeEnum } from './types'
 import { LoggerService } from '../utils/logger'
 

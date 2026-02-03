@@ -324,8 +324,8 @@ export class FilterQueryValidator {
                     // Если не найдено при сплите, попробуем проверить на родительский путь (для вложенных полей через точку)
                     // Но это уже должно было быть покрыто логикой в начале функции или ниже
                 }
-            } 
-            
+            }
+
             if (!schemaPath) {
                 // Проверка, что это родительский путь для вложенных полей (например profile для profile.bio)
                 const cleanPath = path.replace(/\[\d+\]/g, '')
@@ -531,13 +531,13 @@ export function parseAndValidateFilterQuery(
             filterQuery: validation.isValid ? filterQuery : null,
             validation,
         }
-        } catch (error) {
-            return {
-                filterQuery: null,
-                validation: {
-                    isValid: false,
-                    errors: [`JSON parsing error: ${error instanceof Error ? error.message : String(error)}`],
-                },
-            }
+    } catch (error) {
+        return {
+            filterQuery: null,
+            validation: {
+                isValid: false,
+                errors: [`JSON parsing error: ${error instanceof Error ? error.message : String(error)}`],
+            },
         }
+    }
 }

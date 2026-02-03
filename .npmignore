@@ -1,0 +1,11 @@
+# Исключаем из пакета, но НЕ исключаем dist (он нужен в пакете)
+node_modules/
+.yarn/
+.idea/
+.vscode/
+*.log
+.env
+.env.local
+*.tsbuildinfo
+*.tgz
+.pnp.*

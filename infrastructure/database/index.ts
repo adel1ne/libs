@@ -1,2 +1,2 @@
-export * from './base.repository'
-export * from './db-manager'
+export * from './mongodb'
+export * from './prisma'

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify'
 import mongoose, { Connection, ConnectOptions, MongooseOptions } from 'mongoose'
-import { Shutdownable } from '../shutdown'
-import { LoggerService } from '../../utils/logger'
+import { Shutdownable } from '../../shutdown'
+import { LoggerService } from '../../../utils/logger'
 
 export interface DatabaseConfig {
     uri: string
@@ -39,10 +39,10 @@ export class DatabaseManager implements Shutdownable {
     private setupGlobalMongooseOptions(): void {
         // Отключаем глобальное буферирование команд для лучшего контроля
         mongoose.set('bufferCommands', false)
-        
+
         // Включаем строгий режим для запросов
         mongoose.set('strictQuery', true)
-        
+
         mongoose.set('autoIndex', false)
     }
 
@@ -93,12 +93,12 @@ export class DatabaseManager implements Shutdownable {
             // Используем глобальное подключение mongoose.connect()
             this.logger.info(`[PROCESSING] Connecting to MongoDB with URI: ${config.uri}`)
             await mongoose.connect(config.uri, defaultOptions)
-            
+
             // Настраиваем обработчики событий для глобального подключения
             this.setupGlobalConnectionEventHandlers()
-            
+
             this.logger.info(`[SUCCESS] MongoDB connected successfully to: ${config.uri}`)
-            
+
             return mongoose.connection
         } catch (error) {
             this.logger.error({ err: error }, '[ERROR] Failed to connect to MongoDB')
@@ -159,11 +159,11 @@ export class DatabaseManager implements Shutdownable {
         if (this.reconnectAttempts < this.maxReconnectAttempts) {
             this.reconnectAttempts++
             const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1)
-            
+
             this.logger.info(
                 `[PROCESSING] Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`
             )
-            
+
             setTimeout(() => {
                 this.reconnect()
             }, delay)
@@ -177,7 +177,7 @@ export class DatabaseManager implements Shutdownable {
      */
     private handleConnectionError(error: Error): void {
         this.logger.error({ err: error }, '[ERROR] MongoDB connection error occurred')
-        
+
         // Для критических ошибок можно добавить логику уведомлений
         if (process.env.NODE_ENV === 'production') {
             // Здесь можно добавить отправку уведомлений в Slack, email и т.д.
@@ -294,7 +294,7 @@ export class DatabaseManager implements Shutdownable {
 
         this.logger.info('[PROCESSING] Starting graceful shutdown of database connection...')
         this.isShuttingDown = true
-        
+
         try {
             await this.disconnect()
             this.logger.info('[SUCCESS] Database connection gracefully closed')

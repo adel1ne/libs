@@ -116,14 +116,6 @@ export abstract class BaseRepository<T extends Document> {
         }
     }
 
-    // async findByIdLean(id: string): Promise<T | null> {
-    //     try {
-    //         return await this.model.findById(id).lean()
-    //     } catch (error) {
-    //         throw new Error(`Failed to find document by id: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    //     }
-    // }
-
     async findOneLean<P extends ProjectionType<T> = {}>(
         filter: FilterQuery<T>,
         projection?: P,
