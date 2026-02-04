@@ -1,4 +1,4 @@
-import { parseExpression } from 'cron-parser'
+import { CronExpressionParser } from 'cron-parser'
 
 /**
  * Проверяет, имеет ли cron выражение фиксированный интервал
@@ -7,10 +7,10 @@ import { parseExpression } from 'cron-parser'
  */
 export function hasFixedInterval(cronPattern: string): boolean {
     try {
-        const interval = parseExpression(cronPattern)
+        const interval = CronExpressionParser.parse(cronPattern)
 
         // Получаем несколько следующих дат
-        const dates = interval.iterate(3)
+        const dates = interval.take(3)
 
         if (dates.length < 3) return false
 
@@ -35,8 +35,8 @@ export function getFixedInterval(cronPattern: string): number {
     }
 
     try {
-        const interval = parseExpression(cronPattern)
-        const dates = interval.iterate(2)
+        const interval = CronExpressionParser.parse(cronPattern)
+        const dates = interval.take(2)
 
         return dates[1]!.getTime() - dates[0]!.getTime()
     } catch (error) {

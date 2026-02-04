@@ -1,4 +1,5 @@
-import { Model, Document, FilterQuery, SortOrder, UpdateQuery, ProjectionType, UpdateResult } from 'mongoose'
+import { Model, Document, SortOrder, UpdateQuery, ProjectionType, UpdateResult } from 'mongoose'
+import type { QueryFilter } from 'mongoose'
 
 // Тип для lean объектов - обычные JavaScript объекты без методов Mongoose
 export type LeanObject<T> = Omit<T, keyof Document> & { _id: string }
@@ -59,7 +60,7 @@ export abstract class BaseRepository<T extends Document> {
         }
     }
 
-    async findOne(filter: FilterQuery<T>): Promise<T | null> {
+    async findOne(filter: QueryFilter<T>): Promise<T | null> {
         try {
             return await this.model.findOne(filter).exec()
         } catch (error) {
@@ -68,7 +69,7 @@ export abstract class BaseRepository<T extends Document> {
     }
 
     async findAll(
-        filter: FilterQuery<T> = {},
+        filter: QueryFilter<T> = {},
         sort: { [key: string]: SortOrder } = {},
         limit = 0,
         skip = 0,
@@ -82,7 +83,7 @@ export abstract class BaseRepository<T extends Document> {
 
     // Lean versions - возвращают обычные JavaScript объекты
     async findAllLean(
-        filter: FilterQuery<T> = {},
+        filter: QueryFilter<T> = {},
         projection: ProjectionType<T> = {},
         sort: { [key: string]: SortOrder } = {},
         limit = 0,
@@ -117,7 +118,7 @@ export abstract class BaseRepository<T extends Document> {
     }
 
     async findOneLean<P extends ProjectionType<T> = {}>(
-        filter: FilterQuery<T>,
+        filter: QueryFilter<T>,
         projection?: P,
     ): Promise<ProjectedLeanObject<T, P> | null> {
         try {
@@ -144,7 +145,7 @@ export abstract class BaseRepository<T extends Document> {
         }
     }
 
-    async updateMany(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<UpdateResult> {
+    async updateMany(filter: QueryFilter<T>, update: UpdateQuery<T>): Promise<UpdateResult> {
         try {
             return await this.model.updateMany(filter, update).exec()
         } catch (error) {
@@ -152,7 +153,7 @@ export abstract class BaseRepository<T extends Document> {
         }
     }
 
-    async updateOneBy(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<T | null> {
+    async updateOneBy(filter: QueryFilter<T>, update: UpdateQuery<T>): Promise<T | null> {
         const updatedDoc = await this.model.findOneAndUpdate(filter, update, { new: true }).exec()
         if (!updatedDoc) {
             throw new Error('No document found')
@@ -160,7 +161,7 @@ export abstract class BaseRepository<T extends Document> {
         return updatedDoc
     }
 
-    async updateOneByLean(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<LeanObject<T>> {
+    async updateOneByLean(filter: QueryFilter<T>, update: UpdateQuery<T>): Promise<LeanObject<T>> {
         try {
             const updatedDoc = (await this.model
                 .findOneAndUpdate(filter, update, { new: true, projection: { _id: 0, __v: 0 } })
@@ -186,7 +187,7 @@ export abstract class BaseRepository<T extends Document> {
     }
 
     // Новые методы для Mongoose 8
-    async count(filter: FilterQuery<T> = {}): Promise<number> {
+    async count(filter: QueryFilter<T> = {}): Promise<number> {
         try {
             return await this.model.countDocuments(filter).exec()
         } catch (error) {
@@ -194,7 +195,7 @@ export abstract class BaseRepository<T extends Document> {
         }
     }
 
-    async exists(filter: FilterQuery<T>): Promise<boolean> {
+    async exists(filter: QueryFilter<T>): Promise<boolean> {
         try {
             const result = await this.model.exists(filter)
             return result !== null
@@ -205,7 +206,7 @@ export abstract class BaseRepository<T extends Document> {
         }
     }
 
-    async deleteMany(filter: FilterQuery<T>): Promise<void> {
+    async deleteMany(filter: QueryFilter<T>): Promise<void> {
         await this.model.deleteMany(filter).exec()
     }
 }
